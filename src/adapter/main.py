@@ -12,6 +12,8 @@ from adapter.observability.otel import configure_otel
 from adapter.observability.request_id import RequestIdMiddleware
 from adapter.routes.embeddings import router as embeddings_router
 from adapter.routes.health import router as health_router
+from adapter.routes.info import router as info_router
+from adapter.routes.version import router as version_router
 from adapter.settings import get_settings
 from adapter.utils.errors import openai_error_dict
 
@@ -31,6 +33,8 @@ app.add_middleware(MetricsMiddleware)
 
 app.include_router(embeddings_router)
 app.include_router(health_router)
+app.include_router(info_router)
+app.include_router(version_router)
 if settings.metrics_enabled:
     app.include_router(metrics_router())
 if settings.otel_enabled:
