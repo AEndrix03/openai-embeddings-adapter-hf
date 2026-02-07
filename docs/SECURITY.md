@@ -13,6 +13,7 @@ Authentication is enforced at middleware level before request processing.
 ## Rate limiting
 
 Token bucket rate limiting is available to protect shared/GPU services.
+Keys are derived from bearer token when available, otherwise client IP.
 
 ## Hardening
 
