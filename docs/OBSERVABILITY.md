@@ -14,6 +14,13 @@ Enable JSON logs with `ADAPTER_LOG_JSON=true`.
 ## Metrics
 
 Prometheus endpoint is exposed on `/metrics` when `ADAPTER_METRICS_ENABLED=true`.
+Kubernetes `ServiceMonitor` is available in `k8s/base/servicemonitor.yaml`.
+
+Suggested alerts:
+
+- elevated 5xx rate
+- elevated 429 rate
+- high p95 latency
 
 ## Tracing
 

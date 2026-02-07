@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: hf-embeddings-adapter
+spec:
+  selector:
+    matchLabels:
+      app: hf-embeddings-adapter
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
