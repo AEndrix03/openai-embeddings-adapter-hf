@@ -11,6 +11,7 @@ from adapter.observability.metrics import MetricsMiddleware, metrics_router
 from adapter.observability.otel import configure_otel
 from adapter.observability.request_id import RequestIdMiddleware
 from adapter.routes.embeddings import router as embeddings_router
+from adapter.routes.health import router as health_router
 from adapter.settings import get_settings
 from adapter.utils.errors import openai_error_dict
 
@@ -19,6 +20,8 @@ configure_logging(settings.log_json)
 
 app = FastAPI(title="HF OpenAI Embeddings Adapter")
 app.state.model_loader = ModelLoader(settings)
+app.state.drain_mode = False
+app.state.model_loaded = False
 
 app.add_middleware(RequestIdMiddleware)
 app.add_middleware(AccessLogMiddleware)
@@ -27,6 +30,7 @@ app.add_middleware(RateLimitMiddleware, settings=settings)
 app.add_middleware(MetricsMiddleware)
 
 app.include_router(embeddings_router)
+app.include_router(health_router)
 if settings.metrics_enabled:
     app.include_router(metrics_router())
 if settings.otel_enabled:
