@@ -1,17 +1,46 @@
-# Runbook
+# Operational Runbook
 
-## Graceful shutdown and drain
+## Suggested SLOs
 
-When SIGTERM is received:
+- Availability: 99.9%
+- p95 latency: < 500ms (small batches)
+- Error budget focused on 5xx and 429 behavior
 
-1. Drain mode is enabled.
-2. `/readyz` reports not ready.
-3. New requests are rejected with `503` retryable error.
-4. In-flight requests are allowed to complete up to `ADAPTER_DRAIN_TIMEOUT_SECONDS`.
+## Drain and shutdown
 
-## Troubleshooting quick list
+On SIGTERM:
 
-- 503 spikes: check drain events and rollout settings.
-- 429 spikes: tune `ADAPTER_RATE_LIMIT_RPS` and burst.
-- slow startup: warm model or enable eager loading.
-- OOM: reduce max batch/length and use stricter limits.
+1. drain mode enabled
+2. `/readyz` reports not-ready
+3. new requests return `503`
+4. in-flight requests complete within timeout
+
+## Incident playbooks
+
+### 503 / timeout spikes
+
+- Check deployment rollouts and pod terminations.
+- Verify drain timeout and readiness probe delays.
+- Inspect model loading latency and upstream resource pressure.
+
+### OOM events
+
+- Lower `ADAPTER_MAX_BATCH_SIZE`.
+- Lower `ADAPTER_MAX_LENGTH_TOKENS`.
+- Keep strict input limits enabled.
+
+### 429 bursts
+
+- Increase capacity or replicas.
+- Tune rate limit RPS/burst.
+- Apply backoff/retry policy in callers.
+
+### dimensions mismatch
+
+- Align request `dimensions` and `X-Embedding-Dim` with model capability.
+- Remove conflicting hint headers.
+
+### cache issues / slow model load
+
+- Verify HF cache volume/PVC mount.
+- Ensure model artifacts are cached and persistent.
