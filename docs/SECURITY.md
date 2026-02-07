@@ -1,22 +1,30 @@
 # Security
 
-## Authentication
+## Threat model
 
-Supported modes via environment:
+Primary risks:
 
-- `none`
-- `bearer`
-- `basic`
+- unauthorized access
+- abusive request rates
+- oversized input leading to resource exhaustion
+- vulnerable dependencies/images
 
-Authentication is enforced at middleware level before request processing.
+## Controls
 
-## Rate limiting
-
-Token bucket rate limiting is available to protect shared/GPU services.
-Keys are derived from bearer token when available, otherwise client IP.
-
-## Hardening
-
+- Authentication (`none`/`bearer`/`basic`)
+- Token-bucket rate limiting
+- Input limits (batch, per-item chars, total chars)
+- Graceful drain behavior for safe rollouts
 - Non-root containers
-- Security scans in CI
-- SBOM generation
+
+## CI security checks
+
+- dependency audit (`pip-audit`)
+- container vulnerability scan (`trivy`)
+- SBOM generation (`syft`/SPDX)
+
+## Secrets and least privilege
+
+- pass secrets through secure env/secret manager
+- avoid logging secrets
+- keep runtime permissions minimal
