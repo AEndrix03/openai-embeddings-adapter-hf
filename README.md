@@ -9,6 +9,14 @@ OpenAI-compatible adapter exposing `POST /v1/embeddings` backed by one Hugging F
 - CPU: `Dockerfile.cpu`, compose profile `cpu`, K8s overlay `cpu`
 - GPU: `Dockerfile.gpu`, compose profile `gpu`, K8s overlay `gpu`
 
+## Startup and cache controls
+
+- `ADAPTER_LOAD_MODEL_ON_STARTUP=true` to preload model during container boot
+- Persistent response cache (SQLite/WAL) via:
+  - `ADAPTER_CACHE_ENABLED=true`
+  - `ADAPTER_CACHE_PATH=/var/cache/adapter/embeddings_cache.sqlite3`
+  - `ADAPTER_CACHE_MAX_ENTRIES=100000`
+
 ## Quickstart
 
 ```bash

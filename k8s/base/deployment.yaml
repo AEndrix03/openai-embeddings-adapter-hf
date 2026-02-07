@@ -38,3 +38,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: hf-embeddings-adapter-env
+          env:
+            - name: ADAPTER_CACHE_PATH
+              value: /var/cache/adapter/embeddings_cache.sqlite3
+          volumeMounts:
+            - name: embeddings-cache
+              mountPath: /var/cache/adapter
+      volumes:
+        - name: embeddings-cache
+          persistentVolumeClaim:
+            claimName: hf-embeddings-adapter-cache-pvc

@@ -11,8 +11,10 @@ services:
       - .env.example
     environment:
       ADAPTER_MODEL_DEVICE: cpu
+      ADAPTER_CACHE_PATH: /var/cache/adapter/embeddings_cache.sqlite3
     volumes:
       - hf-cache:/hf-cache
+      - embeddings-cache:/var/cache/adapter
 
   adapter-gpu:
     profiles: ["gpu"]
@@ -25,6 +27,7 @@ services:
       - .env.example
     environment:
       ADAPTER_MODEL_DEVICE: cuda
+      ADAPTER_CACHE_PATH: /var/cache/adapter/embeddings_cache.sqlite3
     deploy:
       resources:
         reservations:
@@ -32,6 +35,8 @@ services:
             - capabilities: [gpu]
     volumes:
       - hf-cache:/hf-cache
+      - embeddings-cache:/var/cache/adapter
 
 volumes:
   hf-cache:
+  embeddings-cache:

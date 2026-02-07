@@ -3,7 +3,8 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     HF_HOME=/hf-cache \
-    TRANSFORMERS_CACHE=/hf-cache
+    TRANSFORMERS_CACHE=/hf-cache \
+    ADAPTER_CACHE_PATH=/var/cache/adapter/embeddings_cache.sqlite3
 
 WORKDIR /app
 
@@ -15,7 +16,7 @@ COPY src /app/src
 
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir .
 
-RUN mkdir -p /hf-cache && chown -R appuser:appuser /app /hf-cache
+RUN mkdir -p /hf-cache /var/cache/adapter && chown -R appuser:appuser /app /hf-cache /var/cache/adapter
 USER appuser
 
 EXPOSE 8000

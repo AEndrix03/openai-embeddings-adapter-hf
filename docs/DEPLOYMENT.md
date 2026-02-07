@@ -37,6 +37,12 @@ kubectl apply -k k8s/overlays/gpu
 ## Environment configuration
 
 Set model/runtime/auth/limits using env vars from `.env.example`.
+Key startup/cache variables:
+
+- `ADAPTER_LOAD_MODEL_ON_STARTUP=true|false` preload model at container start
+- `ADAPTER_CACHE_ENABLED=true|false` enable response cache
+- `ADAPTER_CACHE_PATH=/var/cache/adapter/embeddings_cache.sqlite3`
+- `ADAPTER_CACHE_MAX_ENTRIES=<int>`
 
 ## Rollout checks
 
@@ -49,3 +55,4 @@ kubectl get pods -l app=hf-embeddings-adapter
 
 - NVIDIA driver and container runtime
 - Kubernetes NVIDIA device plugin
+- Persistent volume claim `hf-embeddings-adapter-cache-pvc` for response cache
