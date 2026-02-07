@@ -9,3 +9,8 @@ Use either CPU or GPU image variants and pass environment from `.env.example`.
 - Configure readiness/liveness probes to `/readyz` and `/livez`.
 - Use rolling updates with maxUnavailable tuned to avoid full downtime.
 - During SIGTERM, pod enters drain mode and should be removed from service endpoints.
+
+## GPU requirements
+
+- NVIDIA driver and container runtime must be installed on host/cluster nodes.
+- Kubernetes GPU scheduling requires NVIDIA device plugin.

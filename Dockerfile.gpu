@@ -1,0 +1,21 @@
+FROM pytorch/pytorch:2.4.1-cuda12.1-cudnn9-runtime
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    HF_HOME=/hf-cache \
+    TRANSFORMERS_CACHE=/hf-cache
+
+WORKDIR /app
+
+RUN useradd -m -u 10001 appuser
+
+COPY pyproject.toml README.md /app/
+COPY src /app/src
+
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir .
+
+RUN mkdir -p /hf-cache && chown -R appuser:appuser /app /hf-cache
+USER appuser
+
+EXPOSE 8000
+CMD ["uvicorn", "adapter.main:app", "--host", "0.0.0.0", "--port", "8000"]
