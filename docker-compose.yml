@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  adapter-cpu:
+    profiles: ["cpu"]
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.example
+    environment:
+      ADAPTER_MODEL_DEVICE: cpu
+    volumes:
+      - hf-cache:/hf-cache
+
+  adapter-gpu:
+    profiles: ["gpu"]
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.example
+    environment:
+      ADAPTER_MODEL_DEVICE: cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    volumes:
+      - hf-cache:/hf-cache
+
+volumes:
+  hf-cache:
