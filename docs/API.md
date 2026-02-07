@@ -8,7 +8,7 @@ OpenAI-compatible endpoint for embeddings.
 
 ```json
 {
-  "input": "hello world",
+  "input": ["hello world", "ciao mondo"],
   "model": "optional-model-name",
   "dimensions": 384,
   "encoding_format": "float",
@@ -16,8 +16,13 @@ OpenAI-compatible endpoint for embeddings.
 }
 ```
 
-- `input`: string or list of strings
-- `dimensions`: optional requested output dimensions
+### Supported headers
+
+- `X-Embedding-Dim`
+- `X-Embedding-Normalize`
+- `X-Embedding-Task`
+- `X-Model-Hint`
+- `X-Request-Id`
 
 ### Response body
 
@@ -38,6 +43,12 @@ OpenAI-compatible endpoint for embeddings.
   }
 }
 ```
+
+### Notes
+
+- String input is normalized to a single-item list.
+- Output is ordered by `index`.
+- `usage` fields are placeholder `0` in baseline release.
 
 ### Error contract
 
