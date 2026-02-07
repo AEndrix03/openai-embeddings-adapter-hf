@@ -1,32 +1,52 @@
-# Observability
+# Observability Guide
 
-## Logging
+## Logs
 
-The adapter emits per-request structured logs including:
-
-- request id
-- route and method
-- status code
-- latency
-
-Enable JSON logs with `ADAPTER_LOG_JSON=true`.
+Structured logs include request id, route, method, status, and latency.
+Enable JSON with `ADAPTER_LOG_JSON=true`.
 
 ## Metrics
 
-Prometheus endpoint is exposed on `/metrics` when `ADAPTER_METRICS_ENABLED=true`.
-Kubernetes `ServiceMonitor` is available in `k8s/base/servicemonitor.yaml`.
+Endpoint: `/metrics` (if enabled).
 
-Suggested alerts:
+Key metrics:
 
-- elevated 5xx rate
-- elevated 429 rate
-- high p95 latency
+- `adapter_http_requests_total`
+- `adapter_http_request_latency_seconds`
+- `adapter_embed_requests_total`
+- `adapter_embed_duration_seconds`
+- `adapter_model_loaded`
+- `adapter_drain_mode`
+
+ServiceMonitor manifest: `k8s/base/servicemonitor.yaml`.
 
 ## Tracing
 
-Enable tracing with:
+Enable OTLP export with:
 
 - `ADAPTER_OTEL_ENABLED=true`
-- `ADAPTER_OTEL_ENDPOINT=http://otel-collector:4318/v1/traces`
+- `ADAPTER_OTEL_ENDPOINT=...`
 
-Resource attributes include service name, model id, and device.
+Resource attributes:
+
+- `service.name`
+- `adapter.model_id`
+- `adapter.device`
+
+## Correlation
+
+Use `X-Request-Id` to correlate logs and traces across systems.
+
+## Dashboard suggestions
+
+- request volume by route
+- p50/p95/p99 latency
+- 4xx/5xx split
+- 429 trend
+- embedding duration trend
+
+## Alerting suggestions
+
+- 5xx rate above threshold
+- p95 latency sustained high
+- drain mode unexpectedly long
