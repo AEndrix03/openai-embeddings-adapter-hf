@@ -3,12 +3,17 @@ from __future__ import annotations
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from adapter.observability.logging import AccessLogMiddleware, configure_logging
 from adapter.observability.request_id import RequestIdMiddleware
 from adapter.settings import get_settings
 from adapter.utils.errors import openai_error_dict
 
+settings = get_settings()
+configure_logging(settings.log_json)
+
 app = FastAPI(title="HF OpenAI Embeddings Adapter")
 app.add_middleware(RequestIdMiddleware)
+app.add_middleware(AccessLogMiddleware)
 
 
 @app.get("/")
