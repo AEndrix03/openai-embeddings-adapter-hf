@@ -1,17 +1,33 @@
 # Architecture
 
-## Components
+## Overview
 
-- FastAPI ingress exposing OpenAI-compatible endpoints
-- CPM hints parser and validation layer
-- Thread-safe model loader for Hugging Face model lifecycle
-- Embedding engine (tokenize -> forward -> pooling -> normalize)
-- Middleware stack (auth, rate limiting, drain)
-- Observability stack (request id, logs, metrics, traces)
+The service exposes an OpenAI-compatible embeddings API backed by one Hugging Face model per container.
 
-## Model loading lifecycle
+Request flow:
 
-- Optional eager load at startup
-- Lazy load on first inference by default
-- Single model instance guarded by lock
-- Device and dtype resolved from settings
+1. Ingress `POST /v1/embeddings`
+2. Request ID assignment and access logging
+3. Auth and rate-limit middlewares
+4. Drain gate (reject new requests during shutdown)
+5. CPM header parsing and validation
+6. Input limits validation
+7. Model load (lazy/eager) and embedding computation
+8. Response shaping to OpenAI contract
+
+## Core components
+
+- `settings.py`: central runtime configuration
+- `hints_cpm.py`: CPM header parser and policy
+- `model_loader.py`: thread-safe HF tokenizer/model lifecycle
+- `embedding_engine.py`: tokenize, forward, mean pooling, normalize, dimensions checks
+- `middleware/*`: auth, rate limiting, drain
+- `observability/*`: request-id, structured logging, metrics, tracing
+- `routes/*`: embeddings, probes, info/version
+
+## Shutdown behavior
+
+- SIGTERM enables drain mode
+- readiness turns false
+- new traffic gets 503 retryable
+- in-flight requests complete within timeout
