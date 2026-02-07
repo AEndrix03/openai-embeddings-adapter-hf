@@ -3,7 +3,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field, model_validator
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -50,11 +50,15 @@ class Settings(BaseSettings):
     build_time: str = "unknown"
 
     @model_validator(mode="after")
-    def validate_auth(self) -> "Settings":
+    def validate_auth(self) -> Settings:
         if self.auth_mode == "bearer" and not self.auth_bearer_token:
             raise ValueError("ADAPTER_AUTH_BEARER_TOKEN is required when auth mode is bearer")
-        if self.auth_mode == "basic" and (not self.auth_basic_username or not self.auth_basic_password):
-            raise ValueError("basic auth requires ADAPTER_AUTH_BASIC_USERNAME and ADAPTER_AUTH_BASIC_PASSWORD")
+        if self.auth_mode == "basic" and (
+            not self.auth_basic_username or not self.auth_basic_password
+        ):
+            raise ValueError(
+                "basic auth requires ADAPTER_AUTH_BASIC_USERNAME and ADAPTER_AUTH_BASIC_PASSWORD"
+            )
         if self.max_batch_size < 1:
             raise ValueError("max_batch_size must be >= 1")
         if self.rate_limit_burst < 1:

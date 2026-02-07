@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import threading
 from dataclasses import dataclass
+from typing import Any
 
 import torch
 from transformers import AutoModel, AutoTokenizer
@@ -11,8 +12,8 @@ from adapter.settings import Settings
 
 @dataclass
 class LoadedModel:
-    tokenizer: AutoTokenizer
-    model: AutoModel
+    tokenizer: Any
+    model: Any
     device: str
     dtype: str
     embedding_dim: int

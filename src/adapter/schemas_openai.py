@@ -53,5 +53,7 @@ def to_openai_response(model: str, vectors: list[list[float]]) -> EmbeddingsResp
     return EmbeddingsResponse(model=model, data=items)
 
 
-def error_payload(message: str, err_type: str, param: str | None = None, code: str | None = None) -> dict[str, Any]:
+def error_payload(
+    message: str, err_type: str, param: str | None = None, code: str | None = None
+) -> dict[str, Any]:
     return {"error": {"message": message, "type": err_type, "param": param, "code": code}}

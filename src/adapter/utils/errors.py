@@ -18,5 +18,9 @@ def openai_error_dict(status_code: int, message: str, param: str | None = None) 
     return {"error": {"message": message, "type": err_type, "param": param, "code": code}}
 
 
-def openai_http_exception(status_code: int, message: str, param: str | None = None) -> HTTPException:
-    return HTTPException(status_code=status_code, detail=openai_error_dict(status_code, message, param)["error"])
+def openai_http_exception(
+    status_code: int, message: str, param: str | None = None
+) -> HTTPException:
+    return HTTPException(
+        status_code=status_code, detail=openai_error_dict(status_code, message, param)["error"]
+    )

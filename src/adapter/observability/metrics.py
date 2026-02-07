@@ -9,8 +9,12 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
-HTTP_REQUESTS_TOTAL = Counter("adapter_http_requests_total", "HTTP requests", ["method", "route", "status"])
-HTTP_REQUEST_LATENCY_SECONDS = Histogram("adapter_http_request_latency_seconds", "HTTP request latency", ["route"])
+HTTP_REQUESTS_TOTAL = Counter(
+    "adapter_http_requests_total", "HTTP requests", ["method", "route", "status"]
+)
+HTTP_REQUEST_LATENCY_SECONDS = Histogram(
+    "adapter_http_request_latency_seconds", "HTTP request latency", ["route"]
+)
 EMBED_REQUESTS_TOTAL = Counter("adapter_embed_requests_total", "Embedding requests total")
 EMBED_DURATION_SECONDS = Histogram("adapter_embed_duration_seconds", "Embedding duration seconds")
 MODEL_LOADED = Gauge("adapter_model_loaded", "Model loaded state")

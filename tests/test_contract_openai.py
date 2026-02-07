@@ -12,5 +12,7 @@ def test_enforce_dimensions_from_body() -> None:
 
 def test_enforce_dimensions_from_header() -> None:
     vectors = torch.ones(2, 8)
-    out = enforce_dimensions(vectors, model_dim=8, body_dimensions=None, hints=CpmHints(embedding_dim=6))
+    out = enforce_dimensions(
+        vectors, model_dim=8, body_dimensions=None, hints=CpmHints(embedding_dim=6)
+    )
     assert out.shape[1] == 6

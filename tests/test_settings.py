@@ -1,3 +1,6 @@
+import pytest
+from pydantic import ValidationError
+
 from adapter.settings import Settings
 
 
@@ -8,16 +11,10 @@ def test_default_settings() -> None:
 
 
 def test_bearer_requires_token() -> None:
-    try:
+    with pytest.raises(ValidationError):
         Settings(auth_mode="bearer")
-        assert False, "expected error"
-    except Exception:
-        pass
 
 
 def test_basic_requires_credentials() -> None:
-    try:
+    with pytest.raises(ValidationError):
         Settings(auth_mode="basic", auth_basic_username="u")
-        assert False, "expected error"
-    except Exception:
-        pass

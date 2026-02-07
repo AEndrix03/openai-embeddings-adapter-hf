@@ -39,12 +39,15 @@ def parse_cpm_hints(
     )
 
 
-def enforce_model_hint(configured_model_id: str, hints: CpmHints, reject_on_mismatch: bool = True) -> None:
+def enforce_model_hint(
+    configured_model_id: str, hints: CpmHints, reject_on_mismatch: bool = True
+) -> None:
     if not hints.model_hint:
         return
     if hints.model_hint == configured_model_id:
         return
     if reject_on_mismatch:
         raise ValueError(
-            f"X-Model-Hint mismatch: requested '{hints.model_hint}', configured '{configured_model_id}'"
+            "X-Model-Hint mismatch: "
+            f"requested '{hints.model_hint}', configured '{configured_model_id}'"
         )

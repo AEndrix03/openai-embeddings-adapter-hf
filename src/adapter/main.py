@@ -6,7 +6,12 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from adapter.middleware.auth import AuthMiddleware
-from adapter.middleware.drain import DrainMiddleware, DrainState, install_sigterm_handler, wait_for_inflight_zero
+from adapter.middleware.drain import (
+    DrainMiddleware,
+    DrainState,
+    install_sigterm_handler,
+    wait_for_inflight_zero,
+)
 from adapter.middleware.rate_limit import RateLimitMiddleware
 from adapter.model_loader import ModelLoader
 from adapter.observability.logging import AccessLogMiddleware, configure_logging

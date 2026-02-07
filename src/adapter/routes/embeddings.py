@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, Request
 
 from adapter.embedding_engine import create_embeddings
 from adapter.hints_cpm import CpmHints, enforce_model_hint, parse_cpm_hints
-from adapter.schemas_openai import EmbeddingsRequest, EmbeddingsResponse, normalize_input, to_openai_response
+from adapter.schemas_openai import (
+    EmbeddingsRequest,
+    EmbeddingsResponse,
+    normalize_input,
+    to_openai_response,
+)
 from adapter.settings import get_settings
 from adapter.utils.text_limits import validate_text_limits
 
@@ -15,7 +22,7 @@ router = APIRouter(tags=["embeddings"])
 def create_embeddings_route(
     body: EmbeddingsRequest,
     request: Request,
-    hints: CpmHints = Depends(parse_cpm_hints),
+    hints: Annotated[CpmHints, Depends(parse_cpm_hints)],
 ) -> EmbeddingsResponse:
     settings = get_settings()
     enforce_model_hint(settings.model_id, hints, reject_on_mismatch=True)

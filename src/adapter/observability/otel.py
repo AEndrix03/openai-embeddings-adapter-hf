@@ -9,7 +9,9 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 
-def configure_otel(app: FastAPI, service_name: str, model_id: str, device: str, endpoint: str | None) -> None:
+def configure_otel(
+    app: FastAPI, service_name: str, model_id: str, device: str, endpoint: str | None
+) -> None:
     resource = Resource.create(
         {
             "service.name": service_name,

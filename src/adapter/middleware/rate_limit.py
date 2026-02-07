@@ -59,5 +59,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if not self.settings.rate_limit_enabled:
             return await call_next(request)
         if not self.limiter.allow(request_key(request)):
-            return JSONResponse(status_code=429, content=openai_error_dict(429, "rate limit exceeded"))
+            return JSONResponse(
+                status_code=429, content=openai_error_dict(429, "rate limit exceeded")
+            )
         return await call_next(request)
