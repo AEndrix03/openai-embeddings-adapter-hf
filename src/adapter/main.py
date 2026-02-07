@@ -4,6 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from adapter.observability.logging import AccessLogMiddleware, configure_logging
+from adapter.observability.metrics import MetricsMiddleware, metrics_router
 from adapter.observability.request_id import RequestIdMiddleware
 from adapter.settings import get_settings
 from adapter.utils.errors import openai_error_dict
@@ -14,6 +15,9 @@ configure_logging(settings.log_json)
 app = FastAPI(title="HF OpenAI Embeddings Adapter")
 app.add_middleware(RequestIdMiddleware)
 app.add_middleware(AccessLogMiddleware)
+app.add_middleware(MetricsMiddleware)
+if settings.metrics_enabled:
+    app.include_router(metrics_router())
 
 
 @app.get("/")
