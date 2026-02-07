@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hf-embeddings-adapter
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hf-embeddings-adapter
+  template:
+    metadata:
+      labels:
+        app: hf-embeddings-adapter
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: adapter
+          image: ghcr.io/example/hf-embeddings-adapter:cpu-latest
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8000
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: 8000
+          envFrom:
+            - configMapRef:
+                name: hf-embeddings-adapter-env

@@ -6,9 +6,25 @@ Use either CPU or GPU image variants and pass environment from `.env.example`.
 
 ## Kubernetes
 
-- Configure readiness/liveness probes to `/readyz` and `/livez`.
-- Use rolling updates with maxUnavailable tuned to avoid full downtime.
-- During SIGTERM, pod enters drain mode and should be removed from service endpoints.
+### Base install
+
+```bash
+kubectl apply -k k8s/
+```
+
+### Rollout
+
+```bash
+kubectl rollout status deploy/hf-embeddings-adapter
+```
+
+### Probes and drain
+
+- readiness: `/readyz`
+- liveness: `/livez`
+- health: `/healthz`
+
+Use rolling update strategy and keep at least one replica available.
 
 ## GPU requirements
 
