@@ -1,10 +1,8 @@
-# API Contract
+# API Specification
 
 ## POST /v1/embeddings
 
-OpenAI-compatible endpoint for embeddings.
-
-### Request body
+### Request
 
 ```json
 {
@@ -24,7 +22,7 @@ OpenAI-compatible endpoint for embeddings.
 - `X-Model-Hint`
 - `X-Request-Id`
 
-### Response body
+### Success response
 
 ```json
 {
@@ -44,21 +42,45 @@ OpenAI-compatible endpoint for embeddings.
 }
 ```
 
-### Notes
-
-- String input is normalized to a single-item list.
-- Output is ordered by `index`.
-- `usage` fields are placeholder `0` in baseline release.
-
-### Error contract
+### Error response schema
 
 ```json
 {
   "error": {
-    "message": "invalid input",
+    "message": "human-readable message",
     "type": "invalid_request_error",
     "param": "input",
     "code": "invalid_input"
   }
 }
+```
+
+### Status codes
+
+- `400`: invalid request / validation failure
+- `401`: unauthorized
+- `403`: forbidden
+- `429`: rate limited
+- `503`: service unavailable / draining
+
+## Probes and metadata
+
+- `GET /livez`
+- `GET /readyz`
+- `GET /healthz`
+- `GET /info`
+- `GET /version`
+- `GET /metrics` (optional)
+
+## Curl examples
+
+```bash
+curl -X POST http://localhost:8000/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -H "X-Embedding-Normalize: true" \
+  -d '{"input":["hello","world"],"dimensions":256}'
+```
+
+```bash
+curl http://localhost:8000/readyz
 ```
