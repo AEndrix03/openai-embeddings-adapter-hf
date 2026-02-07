@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     model_device: Literal["auto", "cpu", "cuda"] = "auto"
     model_dtype: Literal["auto", "float32", "float16", "bfloat16"] = "auto"
     eager_load_model: bool = False
+    load_model_on_startup: bool = False
 
     # API limits
     max_batch_size: int = 128
@@ -63,6 +64,8 @@ class Settings(BaseSettings):
             raise ValueError("max_batch_size must be >= 1")
         if self.rate_limit_burst < 1:
             raise ValueError("rate_limit_burst must be >= 1")
+        if self.eager_load_model:
+            self.load_model_on_startup = True
         return self
 
 

@@ -24,7 +24,7 @@ class ModelLoader:
         self.settings = settings
         self._lock = threading.Lock()
         self._loaded: LoadedModel | None = None
-        if settings.eager_load_model:
+        if settings.load_model_on_startup:
             self.get_or_load()
 
     def _resolve_device(self) -> str:

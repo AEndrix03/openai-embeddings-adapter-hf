@@ -18,3 +18,13 @@ def test_bearer_requires_token() -> None:
 def test_basic_requires_credentials() -> None:
     with pytest.raises(ValidationError):
         Settings(auth_mode="basic", auth_basic_username="u")
+
+
+def test_eager_load_backward_compatibility() -> None:
+    s = Settings(eager_load_model=True)
+    assert s.load_model_on_startup is True
+
+
+def test_load_model_on_startup_flag() -> None:
+    s = Settings(load_model_on_startup=True)
+    assert s.load_model_on_startup is True
