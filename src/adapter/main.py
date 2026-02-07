@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 
 from adapter.observability.logging import AccessLogMiddleware, configure_logging
 from adapter.observability.metrics import MetricsMiddleware, metrics_router
+from adapter.observability.otel import configure_otel
 from adapter.observability.request_id import RequestIdMiddleware
 from adapter.settings import get_settings
 from adapter.utils.errors import openai_error_dict
@@ -18,6 +19,14 @@ app.add_middleware(AccessLogMiddleware)
 app.add_middleware(MetricsMiddleware)
 if settings.metrics_enabled:
     app.include_router(metrics_router())
+if settings.otel_enabled:
+    configure_otel(
+        app,
+        service_name=settings.service_name,
+        model_id=settings.model_id,
+        device=settings.model_device,
+        endpoint=settings.otel_endpoint,
+    )
 
 
 @app.get("/")
