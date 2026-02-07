@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     max_length_tokens: int = 512
     default_normalize: bool = True
 
+    # cache
+    cache_enabled: bool = True
+    cache_path: str = ".cache/embeddings_cache.sqlite3"
+    cache_max_entries: int = 100000
+
     # auth
     auth_mode: Literal["none", "bearer", "basic"] = "none"
     auth_bearer_token: str | None = None
@@ -64,6 +69,8 @@ class Settings(BaseSettings):
             raise ValueError("max_batch_size must be >= 1")
         if self.rate_limit_burst < 1:
             raise ValueError("rate_limit_burst must be >= 1")
+        if self.cache_max_entries < 1:
+            raise ValueError("cache_max_entries must be >= 1")
         if self.eager_load_model:
             self.load_model_on_startup = True
         return self

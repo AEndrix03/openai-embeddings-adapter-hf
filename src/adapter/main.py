@@ -24,6 +24,7 @@ from adapter.routes.info import router as info_router
 from adapter.routes.version import router as version_router
 from adapter.settings import get_settings
 from adapter.utils.errors import openai_error_dict
+from adapter.utils.response_cache import EmbeddingResponseCache
 
 settings = get_settings()
 configure_logging(settings.log_json)
@@ -43,6 +44,11 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="HF OpenAI Embeddings Adapter", lifespan=lifespan)
 app.state.model_loader = ModelLoader(settings)
+app.state.embedding_cache = (
+    EmbeddingResponseCache(settings.cache_path, settings.cache_max_entries)
+    if settings.cache_enabled
+    else None
+)
 app.state.drain_state = drain_state
 app.state.drain_mode = False
 app.state.model_loaded = False

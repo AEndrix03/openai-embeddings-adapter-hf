@@ -13,6 +13,7 @@ from adapter.schemas_openai import (
     to_openai_response,
 )
 from adapter.settings import get_settings
+from adapter.utils.response_cache import build_cache_key
 from adapter.utils.text_limits import validate_text_limits
 
 router = APIRouter(tags=["embeddings"])
@@ -37,6 +38,24 @@ def create_embeddings_route(
 
     loaded = request.app.state.model_loader.get_or_load()
     normalize = hints.normalize if hints.normalize is not None else settings.default_normalize
+    cache = getattr(request.app.state, "embedding_cache", None)
+    cache_key = None
+    if settings.cache_enabled and cache is not None:
+        cache_key = build_cache_key(
+            model_id=settings.model_id,
+            inputs=items,
+            normalize=normalize,
+            dimensions=body.dimensions or hints.embedding_dim,
+            task=hints.task,
+        )
+        cached_vectors = cache.get(cache_key)
+        if cached_vectors is not None:
+            cached_response = to_openai_response(settings.model_id, cached_vectors)
+            cached_response.data = sorted(cached_response.data, key=lambda x: x.index)
+            cached_response.usage.prompt_tokens = 0
+            cached_response.usage.total_tokens = 0
+            return cached_response
+
     vectors = create_embeddings(
         loaded,
         inputs=items,
@@ -45,6 +64,8 @@ def create_embeddings_route(
         hints=hints,
         max_length=settings.max_length_tokens,
     )
+    if cache_key is not None and settings.cache_enabled and cache is not None:
+        cache.set(cache_key, vectors)
 
     response = to_openai_response(settings.model_id, vectors)
     response.data = sorted(response.data, key=lambda x: x.index)
