@@ -30,6 +30,9 @@ class ModelLoader:
     def _resolve_device(self) -> str:
         if self.settings.model_device == "auto":
             return "cuda" if torch.cuda.is_available() else "cpu"
+        if self.settings.model_device == "rocm":
+            # PyTorch uses "cuda" device strings for ROCm/HIP backends.
+            return "cuda"
         return self.settings.model_device
 
     def _resolve_dtype(self) -> torch.dtype:

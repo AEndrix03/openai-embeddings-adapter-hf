@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     # model/runtime
     model_id: str = "sentence-transformers/all-MiniLM-L6-v2"
-    model_device: Literal["auto", "cpu", "cuda"] = "auto"
+    model_device: Literal["auto", "cpu", "cuda", "rocm"] = "auto"
     model_dtype: Literal["auto", "float32", "float16", "bfloat16"] = "auto"
     eager_load_model: bool = False
     load_model_on_startup: bool = False

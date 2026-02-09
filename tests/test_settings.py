@@ -34,3 +34,8 @@ def test_cache_settings_validation() -> None:
     s = Settings(cache_enabled=True, cache_path="tmp/cache.sqlite3", cache_max_entries=100)
     assert s.cache_enabled is True
     assert s.cache_max_entries == 100
+
+
+def test_model_device_accepts_rocm() -> None:
+    s = Settings(model_device="rocm")
+    assert s.model_device == "rocm"

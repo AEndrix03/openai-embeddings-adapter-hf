@@ -7,11 +7,12 @@ OpenAI-compatible adapter exposing `POST /v1/embeddings` backed by one Hugging F
 ## Runtime matrix
 
 - CPU: `Dockerfile.cpu`, compose profile `cpu`, K8s overlay `cpu`
-- GPU: `Dockerfile.gpu`, compose profile `gpu`, K8s overlay `gpu`
+- GPU (CUDA/ROCm 6): `Dockerfile.gpu`, compose profile `gpu`, K8s overlay `gpu`
 
 ## Startup and cache controls
 
 - `ADAPTER_LOAD_MODEL_ON_STARTUP=true` to preload model during container boot
+- `ADAPTER_MODEL_DEVICE` accepts `auto`, `cpu`, `cuda`, `rocm` (`rocm` maps to PyTorch `cuda` runtime)
 - Persistent response cache (SQLite/WAL) via:
   - `ADAPTER_CACHE_ENABLED=true`
   - `ADAPTER_CACHE_PATH=/var/cache/adapter/embeddings_cache.sqlite3`
