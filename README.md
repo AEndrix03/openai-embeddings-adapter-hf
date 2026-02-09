@@ -8,6 +8,8 @@ OpenAI-compatible adapter exposing `POST /v1/embeddings` backed by one Hugging F
 
 - CPU: `Dockerfile.cpu`, compose profile `cpu`, K8s overlay `cpu`
 - GPU (CUDA/ROCm 6): `Dockerfile.gpu`, compose profile `gpu`, K8s overlay `gpu`
+  - default GPU base image: `rocm/pytorch:rocm6.4_ubuntu24.04_py3.12_pytorch_release_2.4.1`
+  - override with `TORCH_BASE_IMAGE=<pytorch-image>` at build time
 
 ## Startup and cache controls
 

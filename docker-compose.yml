@@ -21,6 +21,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.gpu
+      args:
+        TORCH_BASE_IMAGE: ${TORCH_BASE_IMAGE:-rocm/pytorch:rocm6.4_ubuntu24.04_py3.12_pytorch_release_2.4.1}
     ports:
       - "8000:8000"
     env_file:
