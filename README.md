@@ -18,6 +18,12 @@ OpenAI-compatible adapter exposing `POST /v1/embeddings` backed by one Hugging F
 
 - `ADAPTER_LOAD_MODEL_ON_STARTUP=true` to preload model during container boot
 - `ADAPTER_MODEL_DEVICE` accepts `auto`, `cpu`, `cuda`, `rocm` (`rocm` maps to PyTorch `cuda` runtime)
+- `ADAPTER_MODEL_TRUST_REMOTE_CODE=true` for models that require custom HF code
+- `ADAPTER_MODEL_STRICT_LOADING=true` fails fast on incompatible checkpoints to avoid degenerate embeddings
+- Rate limit via env:
+  - `ADAPTER_RATE_LIMIT_ENABLED=true|false`
+  - `ADAPTER_RATE_LIMIT_RPS=20`
+  - `ADAPTER_RATE_LIMIT_BURST=40`
 - Persistent response cache (SQLite/WAL) via:
   - `ADAPTER_CACHE_ENABLED=true`
   - `ADAPTER_CACHE_PATH=/var/cache/adapter/embeddings_cache.sqlite3`
@@ -38,6 +44,8 @@ uvicorn adapter.main:app --reload
 docker compose --profile cpu up --build
 docker compose --profile cuda up --build adapter-cuda
 docker compose --profile rocm6 up --build adapter-rocm6
+# richiede host ROCm con /dev/kfd e /dev/dri
+docker compose --profile rocm6-accel up --build adapter-rocm6-accel
 ```
 
 ## Endpoints

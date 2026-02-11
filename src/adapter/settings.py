@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     model_id: str = "sentence-transformers/all-MiniLM-L6-v2"
     model_device: Literal["auto", "cpu", "cuda", "rocm"] = "auto"
     model_dtype: Literal["auto", "float32", "float16", "bfloat16"] = "auto"
+    model_trust_remote_code: bool = False
+    model_strict_loading: bool = True
     eager_load_model: bool = False
     load_model_on_startup: bool = False
 
@@ -67,6 +69,10 @@ class Settings(BaseSettings):
             )
         if self.max_batch_size < 1:
             raise ValueError("max_batch_size must be >= 1")
+        if self.max_length_tokens < 2:
+            raise ValueError("max_length_tokens must be >= 2")
+        if self.rate_limit_rps <= 0:
+            raise ValueError("rate_limit_rps must be > 0")
         if self.rate_limit_burst < 1:
             raise ValueError("rate_limit_burst must be >= 1")
         if self.cache_max_entries < 1:

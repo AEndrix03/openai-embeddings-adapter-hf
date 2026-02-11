@@ -35,6 +35,15 @@ On SIGTERM:
 - Tune rate limit RPS/burst.
 - Apply backoff/retry policy in callers.
 
+### embeddings almost identical
+
+- Check `/info` and verify `max_length_tokens` is not too low (must be `>= 2`).
+- Verify `model_id` points to an embeddings model (not a generic generative model).
+- If startup fails with checkpoint mismatch, enable `ADAPTER_MODEL_TRUST_REMOTE_CODE=true` for models that require custom code.
+- Keep `ADAPTER_MODEL_STRICT_LOADING=true` to prevent silently loading incompatible checkpoints.
+- Send a direct request with two very different texts and compare vectors before storing them.
+- If cache is enabled, invalidate stale vectors when changing model/runtime config.
+
 ### dimensions mismatch
 
 - Align request `dimensions` and `X-Embedding-Dim` with model capability.

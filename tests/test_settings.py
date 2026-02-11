@@ -39,3 +39,23 @@ def test_cache_settings_validation() -> None:
 def test_model_device_accepts_rocm() -> None:
     s = Settings(model_device="rocm")
     assert s.model_device == "rocm"
+
+
+def test_rate_limit_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ADAPTER_RATE_LIMIT_ENABLED", "false")
+    monkeypatch.setenv("ADAPTER_RATE_LIMIT_RPS", "120")
+    monkeypatch.setenv("ADAPTER_RATE_LIMIT_BURST", "240")
+    s = Settings()
+    assert s.rate_limit_enabled is False
+    assert s.rate_limit_rps == 120
+    assert s.rate_limit_burst == 240
+
+
+def test_max_length_tokens_must_be_at_least_two() -> None:
+    with pytest.raises(ValidationError):
+        Settings(max_length_tokens=1)
+
+
+def test_rate_limit_rps_must_be_positive() -> None:
+    with pytest.raises(ValidationError):
+        Settings(rate_limit_rps=0)
