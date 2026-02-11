@@ -33,11 +33,26 @@ docker run --rm \
 docker compose --profile cpu up --build
 docker compose --profile cuda up --build adapter-cuda
 docker compose --profile rocm6 up --build adapter-rocm6
+docker compose --profile rocm6-accel up --build adapter-rocm6-accel
+```
+
+Rate limit configuration is fully environment-driven:
+
+```bash
+# Example for high-throughput embedding batches
+ADAPTER_RATE_LIMIT_ENABLED=true
+ADAPTER_RATE_LIMIT_RPS=200
+ADAPTER_RATE_LIMIT_BURST=400
+
+# Or disable it entirely in trusted internal networks
+# ADAPTER_RATE_LIMIT_ENABLED=false
 ```
 
 `adapter-cuda` requires a CUDA-capable runtime (NVIDIA driver + NVIDIA Container Toolkit).
 
-`adapter-rocm6` requires ROCm devices exposed to containers (`/dev/kfd` and `/dev/dri`).
+`adapter-rocm6` is a compatibility profile and can start even when ROCm devices are not exposed.
+
+`adapter-rocm6-accel` requires ROCm devices exposed to containers (`/dev/kfd` and `/dev/dri`).
 
 ## Kubernetes base
 
