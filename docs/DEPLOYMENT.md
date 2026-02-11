@@ -7,19 +7,37 @@ docker build -f Dockerfile.cpu -t hf-adapter:cpu .
 docker run --rm -p 8000:8000 --env-file .env.example hf-adapter:cpu
 ```
 
-## Docker (GPU)
+## Docker (CUDA)
 
 ```bash
-docker build -f Dockerfile.gpu -t hf-adapter:gpu .
-docker run --rm --gpus all -p 8000:8000 --env-file .env.example hf-adapter:gpu
+docker build -f Dockerfile.gpu -t hf-adapter:cuda .
+docker run --rm --gpus all -p 8000:8000 --env-file .env.example hf-adapter:cuda
+```
+
+## Docker (ROCm 6)
+
+```bash
+docker build \
+  --build-arg TORCH_BASE_IMAGE=rocm/pytorch:rocm6.4_ubuntu24.04_py3.12_pytorch_release_2.4.1 \
+  -f Dockerfile.gpu -t hf-adapter:rocm6 .
+docker run --rm \
+  --device=/dev/kfd --device=/dev/dri \
+  --group-add=video --group-add=render \
+  --security-opt seccomp=unconfined \
+  -p 8000:8000 --env-file .env.example hf-adapter:rocm6
 ```
 
 ## Docker Compose profiles
 
 ```bash
 docker compose --profile cpu up --build
-docker compose --profile gpu up --build
+docker compose --profile cuda up --build adapter-cuda
+docker compose --profile rocm6 up --build adapter-rocm6
 ```
+
+`adapter-cuda` requires a CUDA-capable runtime (NVIDIA driver + NVIDIA Container Toolkit).
+
+`adapter-rocm6` requires ROCm devices exposed to containers (`/dev/kfd` and `/dev/dri`).
 
 ## Kubernetes base
 
