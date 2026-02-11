@@ -34,7 +34,7 @@
       "embedding": [0.12, -0.04]
     }
   ],
-  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "model": "jinaai/jina-embeddings-v2-base-code",
   "usage": {
     "prompt_tokens": 0,
     "total_tokens": 0
