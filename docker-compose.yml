@@ -12,6 +12,9 @@ services:
     environment:
       ADAPTER_MODEL_DEVICE: cpu
       ADAPTER_CACHE_PATH: /var/cache/adapter/embeddings_cache.sqlite3
+      ADAPTER_RATE_LIMIT_ENABLED: ${ADAPTER_RATE_LIMIT_ENABLED:-true}
+      ADAPTER_RATE_LIMIT_RPS: ${ADAPTER_RATE_LIMIT_RPS:-1000}
+      ADAPTER_RATE_LIMIT_BURST: ${ADAPTER_RATE_LIMIT_BURST:-1000}
     volumes:
       - hf-cache:/hf-cache
       - embeddings-cache:/var/cache/adapter
@@ -30,6 +33,9 @@ services:
     environment:
       ADAPTER_MODEL_DEVICE: cuda
       ADAPTER_CACHE_PATH: /var/cache/adapter/embeddings_cache.sqlite3
+      ADAPTER_RATE_LIMIT_ENABLED: ${ADAPTER_RATE_LIMIT_ENABLED:-true}
+      ADAPTER_RATE_LIMIT_RPS: ${ADAPTER_RATE_LIMIT_RPS:-1000}
+      ADAPTER_RATE_LIMIT_BURST: ${ADAPTER_RATE_LIMIT_BURST:-1000}
     deploy:
       resources:
         reservations:
@@ -53,6 +59,9 @@ services:
     environment:
       ADAPTER_MODEL_DEVICE: rocm
       ADAPTER_CACHE_PATH: /var/cache/adapter/embeddings_cache.sqlite3
+      ADAPTER_RATE_LIMIT_ENABLED: ${ADAPTER_RATE_LIMIT_ENABLED:-true}
+      ADAPTER_RATE_LIMIT_RPS: ${ADAPTER_RATE_LIMIT_RPS:-1000}
+      ADAPTER_RATE_LIMIT_BURST: ${ADAPTER_RATE_LIMIT_BURST:-1000}
       HSA_OVERRIDE_GFX_VERSION: ${HSA_OVERRIDE_GFX_VERSION:-}
       HIP_VISIBLE_DEVICES: ${HIP_VISIBLE_DEVICES:-0}
     devices:
