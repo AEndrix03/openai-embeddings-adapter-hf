@@ -6,11 +6,11 @@ OpenAI-compatible adapter exposing `POST /v1/embeddings` backed by one Hugging F
 
 ## Runtime matrix
 
-- CPU: `Dockerfile.cpu`, compose profile `cpu`, K8s overlay `cpu`
-- CUDA: `Dockerfile.gpu`, compose profile `cuda`, K8s overlay `gpu`
+- CPU: `Dockerfile.cpu`, compose service `cpu`, K8s overlay `cpu`
+- CUDA: `Dockerfile.gpu`, compose service `cuda`, K8s overlay `gpu`
   - default base image: `pytorch/pytorch:2.4.1-cuda12.1-cudnn9-runtime`
   - override with `CUDA_TORCH_BASE_IMAGE=<image>`
-- ROCm 6: `Dockerfile.gpu`, compose profile `rocm6`
+- ROCm 6: `Dockerfile.gpu`, compose service `rocm6`
   - default base image: `rocm/pytorch:rocm6.4_ubuntu24.04_py3.12_pytorch_release_2.4.1`
   - override with `ROCM6_TORCH_BASE_IMAGE=<image>`
 
@@ -41,11 +41,11 @@ uvicorn adapter.main:app --reload
 ## Docker quickstart
 
 ```bash
-docker compose --profile cpu up --build
-docker compose --profile cuda up --build adapter-cuda
-docker compose --profile rocm6 up --build adapter-rocm6
-# richiede host ROCm con /dev/kfd e /dev/dri
-docker compose --profile rocm6-accel up --build adapter-rocm6-accel
+docker compose up --build cpu
+docker compose up --build cuda
+docker compose up --build rocm6
+# fallback se /dev/kfd non e' disponibile sul host
+docker compose up --build rocm6-safe
 ```
 
 ## Endpoints

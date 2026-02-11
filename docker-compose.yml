@@ -1,7 +1,5 @@
-version: "3.9"
 services:
-  adapter-cpu:
-    profiles: ["cpu"]
+  cpu:
     build:
       context: .
       dockerfile: Dockerfile.cpu
@@ -19,8 +17,7 @@ services:
       - hf-cache:/hf-cache
       - embeddings-cache:/var/cache/adapter
 
-  adapter-cuda:
-    profiles: ["cuda"]
+  cuda:
     build:
       context: .
       dockerfile: Dockerfile.gpu
@@ -45,8 +42,7 @@ services:
       - hf-cache:/hf-cache
       - embeddings-cache:/var/cache/adapter
 
-  adapter-rocm6:
-    profiles: ["rocm6"]
+  rocm6-safe:
     build:
       context: .
       dockerfile: Dockerfile.gpu
@@ -68,8 +64,7 @@ services:
       - hf-cache:/hf-cache
       - embeddings-cache:/var/cache/adapter
 
-  adapter-rocm6-accel:
-    profiles: ["rocm6-accel"]
+  rocm6:
     build:
       context: .
       dockerfile: Dockerfile.gpu

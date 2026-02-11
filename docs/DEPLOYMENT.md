@@ -27,13 +27,13 @@ docker run --rm \
   -p 8000:8000 --env-file .env.example hf-adapter:rocm6
 ```
 
-## Docker Compose profiles
+## Docker Compose services
 
 ```bash
-docker compose --profile cpu up --build
-docker compose --profile cuda up --build adapter-cuda
-docker compose --profile rocm6 up --build adapter-rocm6
-docker compose --profile rocm6-accel up --build adapter-rocm6-accel
+docker compose up --build cpu
+docker compose up --build cuda
+docker compose up --build rocm6
+docker compose up --build rocm6-safe
 ```
 
 Rate limit configuration is fully environment-driven:
@@ -48,11 +48,11 @@ ADAPTER_RATE_LIMIT_BURST=400
 # ADAPTER_RATE_LIMIT_ENABLED=false
 ```
 
-`adapter-cuda` requires a CUDA-capable runtime (NVIDIA driver + NVIDIA Container Toolkit).
+`cuda` requires a CUDA-capable runtime (NVIDIA driver + NVIDIA Container Toolkit).
 
-`adapter-rocm6` is a compatibility profile and can start even when ROCm devices are not exposed.
+`rocm6` is the accelerated ROCm profile and requires ROCm devices exposed to containers (`/dev/kfd` and `/dev/dri`).
 
-`adapter-rocm6-accel` requires ROCm devices exposed to containers (`/dev/kfd` and `/dev/dri`).
+`rocm6-safe` is a compatibility fallback that can start even when ROCm devices are not exposed.
 
 ## Kubernetes base
 
