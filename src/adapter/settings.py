@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="ADAPTER_", case_sensitive=False)
 
     # model/runtime
-    model_id: str = "sentence-transformers/all-MiniLM-L6-v2"
+    model_id: str = "jinaai/jina-embeddings-v2-base-code"
     model_device: Literal["auto", "cpu", "cuda", "rocm"] = "auto"
     model_dtype: Literal["auto", "float32", "float16", "bfloat16"] = "auto"
     model_trust_remote_code: bool = False

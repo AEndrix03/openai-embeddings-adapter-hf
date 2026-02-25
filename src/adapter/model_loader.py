@@ -30,8 +30,20 @@ class ModelLoader:
     def _resolve_device(self) -> str:
         if self.settings.model_device == "auto":
             return "cuda" if torch.cuda.is_available() else "cpu"
+        if self.settings.model_device == "cuda":
+            if not torch.cuda.is_available():
+                raise RuntimeError(
+                    "ADAPTER_MODEL_DEVICE=cuda requested, but no CUDA/ROCm runtime is available. "
+                    "Use ADAPTER_MODEL_DEVICE=cpu or auto."
+                )
+            return "cuda"
         if self.settings.model_device == "rocm":
             # PyTorch uses "cuda" device strings for ROCm/HIP backends.
+            if not torch.cuda.is_available():
+                raise RuntimeError(
+                    "ADAPTER_MODEL_DEVICE=rocm requested, but no ROCm/HIP runtime is available. "
+                    "Use rocm6-safe (ADAPTER_MODEL_DEVICE=auto) or expose /dev/kfd and /dev/dri."
+                )
             return "cuda"
         return self.settings.model_device
 

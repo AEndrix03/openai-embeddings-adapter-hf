@@ -29,3 +29,10 @@ def test_auth_bearer_fail() -> None:
 def test_auth_bearer_ok() -> None:
     client = build_app(Settings(auth_mode="bearer", auth_bearer_token="t"))
     assert client.get("/ok", headers={"Authorization": "Bearer t"}).status_code == 200
+
+
+def test_auth_bearer_skips_special_methods() -> None:
+    client = build_app(Settings(auth_mode="bearer", auth_bearer_token="t"))
+    assert client.options("/ok").status_code != 401
+    assert client.head("/ok").status_code != 401
+    assert client.request("TRACE", "/ok").status_code != 401

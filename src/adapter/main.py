@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
 from adapter.middleware.auth import AuthMiddleware
@@ -74,6 +74,25 @@ if settings.otel_enabled:
         device=settings.model_device,
         endpoint=settings.otel_endpoint,
     )
+
+
+def auxiliary_method_handler(_: Request) -> Response:
+    return Response(status_code=204)
+
+
+auxiliary_routes: dict[str, list[str]] = {
+    "/v1/embeddings": ["OPTIONS", "HEAD", "TRACE"],
+    "/": ["OPTIONS", "TRACE"],
+    "/livez": ["OPTIONS", "TRACE"],
+    "/readyz": ["OPTIONS", "TRACE"],
+    "/healthz": ["OPTIONS", "TRACE"],
+    "/info": ["OPTIONS", "TRACE"],
+    "/version": ["OPTIONS", "TRACE"],
+}
+if settings.metrics_enabled:
+    auxiliary_routes["/metrics"] = ["OPTIONS", "TRACE"]
+for path, methods in auxiliary_routes.items():
+    app.add_api_route(path, auxiliary_method_handler, methods=methods, include_in_schema=False)
 
 
 @app.get("/")

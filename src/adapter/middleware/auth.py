@@ -16,6 +16,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
         self.settings = settings
 
     async def dispatch(self, request: Request, call_next) -> Response:  # type: ignore[override]
+        if request.method in {"OPTIONS", "HEAD", "TRACE"}:
+            return await call_next(request)
+
         if self.settings.auth_mode == "none":
             return await call_next(request)
 
